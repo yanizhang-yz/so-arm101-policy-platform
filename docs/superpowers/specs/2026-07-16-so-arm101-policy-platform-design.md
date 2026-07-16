@@ -1,4 +1,4 @@
-# SO-101 Policy Platform Design
+# SO-ARM101 Policy Platform Design
 
 Date: 2026-07-16
 
@@ -6,7 +6,7 @@ Status: ready for user review
 
 ## 1. Product Decision
 
-Build a new capstone repository named `so101-policy-platform`.
+Build a new capstone repository named `so-arm101-policy-platform`.
 
 The repository will teach and demonstrate the complete path from a typed task
 instruction and robot observation to policy inference, action chunk execution,
@@ -24,7 +24,7 @@ Development will begin with a small local vertical slice on the user's Mac:
 
 The architecture will then evolve without changing the product-level behavior:
 
-- a real SO-101 adapter through LeRobot
+- a real SO-ARM101 adapter through LeRobot
 - a rented NVIDIA cloud GPU using CUDA
 - Protocol Buffers and gRPC
 - a C++20 ROS 2 edge runtime
@@ -70,7 +70,7 @@ production-oriented forms.
 The first implementation will not:
 
 - train a new VLA model
-- assume arbitrary policies work on the SO-101 embodiment
+- assume arbitrary policies work on the SO-ARM101 embodiment
 - control the robot through voice input
 - expose the local service to the public internet
 - use Kubernetes for one robot and one worker
@@ -80,13 +80,13 @@ The first implementation will not:
 
 ## 5. Users and Main Workflow
 
-The initial user is an inference engineer developing on a Mac with an SO-101,
+The initial user is an inference engineer developing on a Mac with an SO-ARM101,
 one front camera, and a compatible policy checkpoint.
 
 The planned operator workflow is:
 
 ```bash
-MODEL_REPO=yanizhang/so101-smolvla \
+MODEL_REPO=yanizhang/so-arm101-smolvla \
 MODEL_REVISION=010000 \
 DEVICE=mps \
 ROBOT_PORT=/dev/tty.usbmodemXXXX \
@@ -97,7 +97,7 @@ make local-up
 After readiness checks pass:
 
 ```bash
-./bin/so101ctl task start \
+./bin/so-arm101ctl task start \
   --instruction "Pick up the red cube from the mat and place it in the bowl" \
   --timeout-s 60 \
   --feedback
@@ -114,7 +114,7 @@ The system will be delivered as seven independently runnable milestones.
 
 Build the complete request loop with no hardware risk:
 
-- `so101ctl` typed task command
+- `so-arm101ctl` typed task command
 - local edge-agent process
 - local policy-worker process
 - deterministic mock policy backend
@@ -138,11 +138,11 @@ Add:
 - preprocessing, forward, postprocessing, and end-to-end timings
 - a small Torch policy-shaped model before a heavy VLA
 
-### Milestone 3: Real SO-101 Adapter
+### Milestone 3: Real SO-ARM101 Adapter
 
 Add:
 
-- LeRobot SO-101 follower adapter
+- LeRobot SO-ARM101 follower adapter
 - camera adapter
 - calibration and readiness checks
 - observed joint and gripper feedback
@@ -210,11 +210,11 @@ After profiling the PyTorch CUDA baseline:
 The first milestones use this structure:
 
 ```text
-so101-policy-platform/
+so-arm101-policy-platform/
 |-- README.md
 |-- Makefile
 |-- pyproject.toml
-|-- src/so101_policy_platform/
+|-- src/so_arm101_policy_platform/
 |   |-- contracts.py
 |   |-- devices.py
 |   |-- metrics.py
@@ -243,9 +243,9 @@ Later milestones add these bounded areas:
 
 ```text
 contracts/proto/policy/v1/
-edge/ros2_ws/src/so101_interfaces/
-edge/ros2_ws/src/so101_hardware_py/
-edge/ros2_ws/src/so101_runtime_cpp/
+edge/ros2_ws/src/so_arm101_interfaces/
+edge/ros2_ws/src/so_arm101_hardware_py/
+edge/ros2_ws/src/so_arm101_runtime_cpp/
 services/policy_gateway_rs/
 model_tooling/tensorrt_builder/
 deploy/docker/
@@ -308,7 +308,7 @@ The edge agent remains authoritative even when inference moves to the cloud.
 
 ### Operator CLI
 
-Command implemented as `so101ctl`.
+Command implemented as `so-arm101ctl`.
 
 Technology:
 
@@ -368,7 +368,7 @@ Initial implementations:
 - `MockPolicyBackend`
 - `TorchPolicyBackend`
 - `SimulatedRobotAdapter`
-- `LeRobotSO101Adapter`
+- `LeRobotSOArm101Adapter`
 - `ManualSuccessDetector`
 - later `VisionSuccessDetector`
 
@@ -390,7 +390,7 @@ POST /v1/infer
 {
   "request_id": "req-000042",
   "task_id": "task-000007",
-  "robot_id": "so101-main",
+  "robot_id": "so-arm101-main",
   "instruction": "Pick up the red cube",
   "captured_at_ns": 1784222700000000000,
   "deadline_ms": 150,
@@ -407,7 +407,7 @@ It returns:
 ```json
 {
   "request_id": "req-000042",
-  "model_id": "yanizhang/so101-smolvla",
+  "model_id": "yanizhang/so-arm101-smolvla",
   "model_revision": "010000",
   "actions": [
     {
@@ -440,11 +440,11 @@ POST /v1/tasks/{task_id}/cancel
 POST /v1/tasks/{task_id}/operator-result
 ```
 
-Only one active task is allowed in the initial SO-101 system.
+Only one active task is allowed in the initial SO-ARM101 system.
 
 ## 11. Request and Action Loop
 
-1. `so101ctl` creates a task through the edge agent.
+1. `so-arm101ctl` creates a task through the edge agent.
 2. The edge agent validates readiness and stores the typed instruction.
 3. Camera and robot state are sampled with timestamps.
 4. The observation is rejected if required data is missing or too old.
@@ -534,7 +534,7 @@ This project is an educational system and does not claim safety certification.
 A model manifest records:
 
 ```yaml
-model_id: yanizhang/so101-smolvla
+model_id: yanizhang/so-arm101-smolvla
 revision: "010000"
 checkpoint_sha256: immutable-content-hash
 policy_type: smolvla
@@ -712,7 +712,7 @@ committed to Git.
 ### Local Simulated Slice
 
 - `make local-up` starts worker and edge agent and waits for readiness.
-- `so101ctl task start` accepts a typed instruction.
+- `so-arm101ctl task start` accepts a typed instruction.
 - the simulator completes a multi-request, multi-chunk control loop.
 - cancellation and timeout stop execution and clear queued actions.
 - tests and documented commands reproduce the behavior.
@@ -725,7 +725,7 @@ committed to Git.
 - stage and end-to-end timings are recorded.
 - deterministic fixtures validate output shape and request mapping.
 
-### Real SO-101
+### Real SO-ARM101
 
 - calibration and camera checks pass before autonomous motion.
 - dry-run mode records predicted actions without moving motors.
@@ -765,7 +765,7 @@ Each milestone will be taught in this order:
 
 ## 23. Source References
 
-- LeRobot SO-101: <https://huggingface.co/docs/lerobot/main/en/so101>
+- LeRobot SO-ARM101: <https://huggingface.co/docs/lerobot/main/en/so101>
 - LeRobot policy deployment: <https://huggingface.co/docs/lerobot/main/inference>
 - LeRobot policy integration: <https://huggingface.co/docs/lerobot/main/en/bring_your_own_policies>
 - PyTorch inference mode: <https://docs.pytorch.org/docs/stable/generated/torch.autograd.grad_mode.inference_mode.html>

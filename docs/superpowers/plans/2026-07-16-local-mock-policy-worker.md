@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the first independently runnable subsystem: a local HTTP policy worker that loads one deterministic backend at startup, validates SO-101 observations, and returns typed action chunks.
+**Goal:** Build the first independently runnable subsystem: a local HTTP policy worker that loads one deterministic backend at startup, validates SO-ARM101 observations, and returns typed action chunks.
 
 **Architecture:** The worker owns policy loading and inference but never owns a robot, camera, serial port, action queue, or task lifecycle. Milestone 1 begins with a deterministic CPU-only backend so the HTTP contract and model lifecycle can be tested before the simulator and edge agent are added in their own plans.
 
@@ -24,9 +24,9 @@
 ## File Map
 
 ```text
-so101-policy-platform/
+so-arm101-policy-platform/
 |-- pyproject.toml                         # package metadata, dependencies, tools, commands
-|-- src/so101_policy_platform/
+|-- src/so_arm101_policy_platform/
 |   |-- __init__.py                        # package version
 |   |-- contracts.py                       # JSON request and response schema
 |   |-- policy_backend.py                  # inference backend boundary
@@ -48,7 +48,7 @@ so101-policy-platform/
 **Files:**
 
 - Create: `pyproject.toml`
-- Create: `src/so101_policy_platform/__init__.py`
+- Create: `src/so_arm101_policy_platform/__init__.py`
 - Create: `tests/unit/test_package.py`
 - Modify: `.gitignore`
 - Modify: `README.md`
@@ -56,18 +56,18 @@ so101-policy-platform/
 **Interfaces:**
 
 - Consumes: Python 3.12 from the developer environment.
-- Produces: importable package `so101_policy_platform` with `__version__: str` and three console-script entry points used by later plans.
+- Produces: importable package `so_arm101_policy_platform` with `__version__: str` and three console-script entry points used by later plans.
 
 - [ ] **Step 1: Write the failing package test**
 
 Create `tests/unit/test_package.py`:
 
 ```python
-import so101_policy_platform
+import so_arm101_policy_platform
 
 
 def test_package_exposes_version() -> None:
-    assert so101_policy_platform.__version__ == "0.1.0"
+    assert so_arm101_policy_platform.__version__ == "0.1.0"
 ```
 
 - [ ] **Step 2: Run the test and verify the package is absent**
@@ -78,7 +78,7 @@ Run:
 python -m pytest -q tests/unit/test_package.py
 ```
 
-Expected: test collection fails with `ModuleNotFoundError: No module named 'so101_policy_platform'`.
+Expected: test collection fails with `ModuleNotFoundError: No module named 'so_arm101_policy_platform'`.
 
 - [ ] **Step 3: Add complete package metadata**
 
@@ -90,9 +90,9 @@ requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [project]
-name = "so101-policy-platform"
+name = "so-arm101-policy-platform"
 version = "0.1.0"
-description = "A learning-first policy serving platform for the SO-101 robot arm"
+description = "A learning-first policy serving platform for the SO-ARM101 robot arm"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -111,12 +111,12 @@ dev = [
 ]
 
 [project.scripts]
-so101ctl = "so101_policy_platform.cli:main"
-so101-policy-worker = "so101_policy_platform.policy_worker:main"
-so101-edge-agent = "so101_policy_platform.edge_api:main"
+so-arm101ctl = "so_arm101_policy_platform.cli:main"
+so-arm101-policy-worker = "so_arm101_policy_platform.policy_worker:main"
+so-arm101-edge-agent = "so_arm101_policy_platform.edge_api:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/so101_policy_platform"]
+packages = ["src/so_arm101_policy_platform"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -131,18 +131,18 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-packages = ["so101_policy_platform"]
+packages = ["so_arm101_policy_platform"]
 mypy_path = "src"
 ```
 
-The CLI and edge-agent script targets intentionally point to modules added by later plans. They reserve stable command names; this plan only runs `so101-policy-worker`.
+The CLI and edge-agent script targets intentionally point to modules added by later plans. They reserve stable command names; this plan only runs `so-arm101-policy-worker`.
 
 - [ ] **Step 4: Add the package initializer**
 
-Create `src/so101_policy_platform/__init__.py`:
+Create `src/so_arm101_policy_platform/__init__.py`:
 
 ```python
-"""SO-101 policy serving platform."""
+"""SO-ARM101 policy serving platform."""
 
 __version__ = "0.1.0"
 ```
@@ -196,7 +196,7 @@ Expected: `1 passed`; Ruff, MyPy, and `git diff --check` exit with code 0.
 - [ ] **Step 8: Commit the package bootstrap**
 
 ```bash
-git add pyproject.toml src/so101_policy_platform/__init__.py tests/unit/test_package.py .gitignore README.md
+git add pyproject.toml src/so_arm101_policy_platform/__init__.py tests/unit/test_package.py .gitignore README.md
 git commit -m "chore: bootstrap Python platform package"
 ```
 
@@ -204,7 +204,7 @@ git commit -m "chore: bootstrap Python platform package"
 
 **Files:**
 
-- Create: `src/so101_policy_platform/contracts.py`
+- Create: `src/so_arm101_policy_platform/contracts.py`
 - Create: `tests/unit/test_contracts.py`
 
 **Interfaces:**
@@ -220,7 +220,7 @@ Create `tests/unit/test_contracts.py`:
 import pytest
 from pydantic import ValidationError
 
-from so101_policy_platform.contracts import (
+from so_arm101_policy_platform.contracts import (
     ActionStep,
     InferenceRequest,
     InferenceResponse,
@@ -232,7 +232,7 @@ def valid_request_data() -> dict[str, object]:
     return {
         "request_id": "req-000042",
         "task_id": "task-000007",
-        "robot_id": "so101-main",
+        "robot_id": "so-arm101-main",
         "instruction": "Pick up the red cube",
         "captured_at_ns": 1_784_222_700_000_000_000,
         "deadline_ms": 150,
@@ -242,7 +242,7 @@ def valid_request_data() -> dict[str, object]:
     }
 
 
-def test_request_accepts_one_so101_observation() -> None:
+def test_request_accepts_one_so_arm101_observation() -> None:
     request = InferenceRequest.model_validate(valid_request_data())
 
     assert request.request_id == "req-000042"
@@ -293,7 +293,7 @@ def test_response_requires_at_least_one_action() -> None:
     with pytest.raises(ValidationError, match="actions"):
         InferenceResponse(
             request_id="req-000042",
-            model_id="mock-so101-policy",
+            model_id="mock-so-arm101-policy",
             model_revision="deterministic-v1",
             actions=[],
             timings_ms=StageTimings(
@@ -309,7 +309,7 @@ def test_response_requires_at_least_one_action() -> None:
 def test_response_serializes_to_json_compatible_values() -> None:
     response = InferenceResponse(
         request_id="req-000042",
-        model_id="mock-so101-policy",
+        model_id="mock-so-arm101-policy",
         model_revision="deterministic-v1",
         actions=[
             ActionStep(
@@ -341,11 +341,11 @@ Run:
 python -m pytest -q tests/unit/test_contracts.py
 ```
 
-Expected: collection fails with `ModuleNotFoundError: No module named 'so101_policy_platform.contracts'`.
+Expected: collection fails with `ModuleNotFoundError: No module named 'so_arm101_policy_platform.contracts'`.
 
 - [ ] **Step 3: Implement all contract types**
 
-Create `src/so101_policy_platform/contracts.py`:
+Create `src/so_arm101_policy_platform/contracts.py`:
 
 ```python
 """Validated data shared across the policy-serving boundary."""
@@ -365,7 +365,7 @@ class StrictModel(BaseModel):
 
 
 class ActionStep(StrictModel):
-    """One normalized SO-101 action in execution order."""
+    """One normalized SO-ARM101 action in execution order."""
 
     joint_positions: JointPositions
     gripper_position: float = Field(ge=0.0, le=1.0)
@@ -423,7 +423,7 @@ Expected: `10 passed` in the focused file, `11 passed` in the full suite, and al
 - [ ] **Step 5: Commit the service contract**
 
 ```bash
-git add src/so101_policy_platform/contracts.py tests/unit/test_contracts.py
+git add src/so_arm101_policy_platform/contracts.py tests/unit/test_contracts.py
 git commit -m "feat: define policy worker contracts"
 ```
 
@@ -431,8 +431,8 @@ git commit -m "feat: define policy worker contracts"
 
 **Files:**
 
-- Create: `src/so101_policy_platform/policy_backend.py`
-- Create: `src/so101_policy_platform/mock_policy.py`
+- Create: `src/so_arm101_policy_platform/policy_backend.py`
+- Create: `src/so_arm101_policy_platform/mock_policy.py`
 - Create: `tests/unit/test_mock_policy.py`
 
 **Interfaces:**
@@ -447,8 +447,8 @@ Create `tests/unit/test_mock_policy.py`:
 ```python
 import pytest
 
-from so101_policy_platform.contracts import InferenceRequest
-from so101_policy_platform.mock_policy import MockPolicyBackend
+from so_arm101_policy_platform.contracts import InferenceRequest
+from so_arm101_policy_platform.mock_policy import MockPolicyBackend
 
 
 def request(
@@ -459,7 +459,7 @@ def request(
     return InferenceRequest(
         request_id=request_id,
         task_id="task-1",
-        robot_id="so101-main",
+        robot_id="so-arm101-main",
         instruction="Pick up the red cube",
         captured_at_ns=1,
         deadline_ms=150,
@@ -483,7 +483,7 @@ def test_load_marks_backend_ready_and_is_idempotent() -> None:
     backend.load()
 
     assert backend.is_ready is True
-    assert backend.model_id == "mock-so101-policy"
+    assert backend.model_id == "mock-so-arm101-policy"
     assert backend.model_revision == "deterministic-v1"
 
 
@@ -530,18 +530,18 @@ Run:
 python -m pytest -q tests/unit/test_mock_policy.py
 ```
 
-Expected: collection fails because `so101_policy_platform.mock_policy` does not exist.
+Expected: collection fails because `so_arm101_policy_platform.mock_policy` does not exist.
 
 - [ ] **Step 3: Define the backend protocol**
 
-Create `src/so101_policy_platform/policy_backend.py`:
+Create `src/so_arm101_policy_platform/policy_backend.py`:
 
 ```python
 """Boundary implemented by every policy execution backend."""
 
 from typing import Protocol
 
-from so101_policy_platform.contracts import InferenceRequest, InferenceResponse
+from so_arm101_policy_platform.contracts import InferenceRequest, InferenceResponse
 
 
 class PolicyBackend(Protocol):
@@ -568,7 +568,7 @@ class PolicyBackend(Protocol):
 
 - [ ] **Step 4: Implement the deterministic policy**
 
-Create `src/so101_policy_platform/mock_policy.py`:
+Create `src/so_arm101_policy_platform/mock_policy.py`:
 
 ```python
 """Deterministic policy used to prove serving and control flow."""
@@ -576,7 +576,7 @@ Create `src/so101_policy_platform/mock_policy.py`:
 import time
 from typing import cast
 
-from so101_policy_platform.contracts import (
+from so_arm101_policy_platform.contracts import (
     ActionStep,
     InferenceRequest,
     InferenceResponse,
@@ -622,7 +622,7 @@ class MockPolicyBackend:
 
     @property
     def model_id(self) -> str:
-        return "mock-so101-policy"
+        return "mock-so-arm101-policy"
 
     @property
     def model_revision(self) -> str:
@@ -679,7 +679,7 @@ Expected: `5 passed` in the focused file, `16 passed` in the full suite, and all
 - [ ] **Step 6: Commit the mock backend**
 
 ```bash
-git add src/so101_policy_platform/policy_backend.py src/so101_policy_platform/mock_policy.py tests/unit/test_mock_policy.py
+git add src/so_arm101_policy_platform/policy_backend.py src/so_arm101_policy_platform/mock_policy.py tests/unit/test_mock_policy.py
 git commit -m "feat: add deterministic mock policy"
 ```
 
@@ -687,7 +687,7 @@ git commit -m "feat: add deterministic mock policy"
 
 **Files:**
 
-- Create: `src/so101_policy_platform/policy_worker.py`
+- Create: `src/so_arm101_policy_platform/policy_worker.py`
 - Create: `tests/integration/test_policy_worker.py`
 
 **Interfaces:**
@@ -702,9 +702,9 @@ Create `tests/integration/test_policy_worker.py`:
 ```python
 from fastapi.testclient import TestClient
 
-from so101_policy_platform.contracts import InferenceRequest, InferenceResponse
-from so101_policy_platform.mock_policy import MockPolicyBackend
-from so101_policy_platform.policy_worker import create_policy_worker
+from so_arm101_policy_platform.contracts import InferenceRequest, InferenceResponse
+from so_arm101_policy_platform.mock_policy import MockPolicyBackend
+from so_arm101_policy_platform.policy_worker import create_policy_worker
 
 
 class CountingBackend(MockPolicyBackend):
@@ -721,7 +721,7 @@ def valid_payload() -> dict[str, object]:
     return {
         "request_id": "req-000042",
         "task_id": "task-000007",
-        "robot_id": "so101-main",
+        "robot_id": "so-arm101-main",
         "instruction": "Pick up the red cube",
         "captured_at_ns": 1_784_222_700_000_000_000,
         "deadline_ms": 150,
@@ -762,7 +762,7 @@ def test_lifespan_loads_backend_once_and_reports_ready() -> None:
     assert first.status_code == 200
     assert first.json() == {
         "status": "ready",
-        "model_id": "mock-so101-policy",
+        "model_id": "mock-so-arm101-policy",
         "model_revision": "deterministic-v1",
     }
     assert second.status_code == 200
@@ -778,7 +778,7 @@ def test_infer_returns_typed_action_chunk() -> None:
     parsed = InferenceResponse.model_validate(response.json())
     assert response.status_code == 200
     assert parsed.request_id == "req-000042"
-    assert parsed.model_id == "mock-so101-policy"
+    assert parsed.model_id == "mock-so-arm101-policy"
     assert len(parsed.actions) == 2
 
 
@@ -812,11 +812,11 @@ Run:
 python -m pytest -q tests/integration/test_policy_worker.py
 ```
 
-Expected: collection fails because `so101_policy_platform.policy_worker` does not exist.
+Expected: collection fails because `so_arm101_policy_platform.policy_worker` does not exist.
 
 - [ ] **Step 3: Implement lifespan, routes, and process entry point**
 
-Create `src/so101_policy_platform/policy_worker.py`:
+Create `src/so_arm101_policy_platform/policy_worker.py`:
 
 ```python
 """HTTP process that owns policy loading and inference."""
@@ -828,9 +828,9 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI, HTTPException, status
 
-from so101_policy_platform.contracts import InferenceRequest, InferenceResponse
-from so101_policy_platform.mock_policy import MockPolicyBackend
-from so101_policy_platform.policy_backend import PolicyBackend
+from so_arm101_policy_platform.contracts import InferenceRequest, InferenceResponse
+from so_arm101_policy_platform.mock_policy import MockPolicyBackend
+from so_arm101_policy_platform.policy_backend import PolicyBackend
 
 
 def create_policy_worker(backend: PolicyBackend | None = None) -> FastAPI:
@@ -841,7 +841,7 @@ def create_policy_worker(backend: PolicyBackend | None = None) -> FastAPI:
         selected_backend.load()
         yield
 
-    worker = FastAPI(title="SO-101 Policy Worker", version="0.1.0", lifespan=lifespan)
+    worker = FastAPI(title="SO-ARM101 Policy Worker", version="0.1.0", lifespan=lifespan)
 
     @worker.get("/health/live")
     def live() -> dict[str, str]:
@@ -876,9 +876,9 @@ app = create_policy_worker()
 
 
 def main() -> None:
-    host = os.getenv("SO101_POLICY_HOST", "127.0.0.1")
-    port = int(os.getenv("SO101_POLICY_PORT", "8000"))
-    uvicorn.run("so101_policy_platform.policy_worker:app", host=host, port=port)
+    host = os.getenv("SO_ARM101_POLICY_HOST", "127.0.0.1")
+    port = int(os.getenv("SO_ARM101_POLICY_PORT", "8000"))
+    uvicorn.run("so_arm101_policy_platform.policy_worker:app", host=host, port=port)
 
 
 if __name__ == "__main__":
@@ -902,7 +902,7 @@ Expected: `6 passed` in the focused file, `22 passed` in the full suite, and all
 - [ ] **Step 5: Commit the HTTP worker**
 
 ```bash
-git add src/so101_policy_platform/policy_worker.py tests/integration/test_policy_worker.py
+git add src/so_arm101_policy_platform/policy_worker.py tests/integration/test_policy_worker.py
 git commit -m "feat: expose local mock policy worker"
 ```
 
@@ -915,14 +915,14 @@ git commit -m "feat: expose local mock policy worker"
 
 **Interfaces:**
 
-- Consumes: `so101-policy-worker`, `/health/live`, `/health/ready`, and `/v1/infer` from Task 4.
+- Consumes: `so-arm101-policy-worker`, `/health/live`, `/health/ready`, and `/v1/infer` from Task 4.
 - Produces: exact local run and inspection commands for the first professor-mode code walkthrough.
 
 - [ ] **Step 1: Start the worker in one terminal**
 
 ```bash
 source .venv/bin/activate
-so101-policy-worker
+so-arm101-policy-worker
 ```
 
 Expected terminal line includes `Uvicorn running on http://127.0.0.1:8000`.
@@ -938,7 +938,7 @@ Expected JSON:
 ```json
 {
     "status": "ready",
-    "model_id": "mock-so101-policy",
+    "model_id": "mock-so-arm101-policy",
     "model_revision": "deterministic-v1"
 }
 ```
@@ -952,7 +952,7 @@ curl --fail --silent \
   --data '{
     "request_id": "req-000042",
     "task_id": "task-000007",
-    "robot_id": "so101-main",
+    "robot_id": "so-arm101-main",
     "instruction": "Pick up the red cube",
     "captured_at_ns": 1784222700000000000,
     "deadline_ms": 150,
@@ -963,7 +963,7 @@ curl --fail --silent \
   http://127.0.0.1:8000/v1/infer | python -m json.tool
 ```
 
-Expected response properties: `request_id` remains `req-000042`, `model_id` is `mock-so101-policy`, there are exactly two actions, and every timing is non-negative.
+Expected response properties: `request_id` remains `req-000042`, `model_id` is `mock-so-arm101-policy`, there are exactly two actions, and every timing is non-negative.
 
 - [ ] **Step 4: Write the milestone explanation**
 
@@ -1010,7 +1010,7 @@ fine-tuned robot policy will later implement the same `PolicyBackend` protocol.
 
 ## What This Does Not Prove
 
-- The base SmolVLA checkpoint can control this SO-101.
+- The base SmolVLA checkpoint can control this SO-ARM101.
 - MPS supports every SmolVLA operator.
 - Predicted actions are physically safe.
 - The camera names, normalization statistics, and joint order match a checkpoint.
