@@ -87,8 +87,8 @@ an NVIDIA GPU.
 - Introduce C++, ROS 2, Rust, TensorRT, Triton, or custom CUDA only after the
   measured baseline shows which problem each technology would solve.
 
-The next documentation unit records the detailed reasoning and rejected
-alternatives behind these choices.
+The detailed reasoning and rejected alternatives are recorded in
+[`decisions/0001-policy-and-gpu-strategy.md`](decisions/0001-policy-and-gpu-strategy.md).
 
 ## 5. Runtime Boundary
 
