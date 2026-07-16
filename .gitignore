@@ -1,0 +1,16 @@
+.DS_Store
+.env
+.venv/
+.pytest_cache/
+.ruff_cache/
+.superpowers/
+__pycache__/
+*.py[cod]
+build/
+dist/
+results/
+checkpoints/
+models/
+*.onnx
+*.plan
+*.safetensors
