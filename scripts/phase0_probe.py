@@ -104,6 +104,7 @@ def collect_inventory(legacy_python: Path | None) -> dict[str, object]:
             "serial_ports": serial_ports(),
             "camera_names": camera_names(),
         },
+        "active_lerobot": python_lerobot_version(Path(sys.executable)),
         "legacy_lerobot": python_lerobot_version(legacy_python),
     }
 

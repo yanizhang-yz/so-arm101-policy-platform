@@ -31,3 +31,20 @@ def test_write_report_creates_parseable_json(tmp_path: Path, monkeypatch) -> Non
 
     assert exit_code == 0
     assert json.loads(output.read_text()) == expected
+
+
+def test_collect_inventory_records_active_and_legacy_lerobot(monkeypatch) -> None:
+    monkeypatch.setattr(
+        phase0_probe,
+        "python_lerobot_version",
+        lambda python: {"executable": str(python) if python else None},
+    )
+    monkeypatch.setattr(phase0_probe, "command_version", lambda *args: {})
+    monkeypatch.setattr(phase0_probe, "serial_ports", lambda: [])
+    monkeypatch.setattr(phase0_probe, "camera_names", lambda: [])
+    legacy_python = Path("/legacy/bin/python")
+
+    inventory = phase0_probe.collect_inventory(legacy_python)
+
+    assert inventory["active_lerobot"] == {"executable": phase0_probe.sys.executable}
+    assert inventory["legacy_lerobot"] == {"executable": str(legacy_python)}
