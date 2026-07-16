@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "experiment_id": "so-arm101-red-cube-to-bowl-v1",
+  "status": "hardware_pending",
+  "task": {
+    "instruction": "Pick up the red cube and place it in the bowl.",
+    "timeout_s": 30,
+    "object": "red cube",
+    "destination": "bowl",
+    "start_positions": [
+      "near_left",
+      "far_left",
+      "center",
+      "near_right",
+      "far_right"
+    ],
+    "target_episodes": 50,
+    "episodes_per_position": 10,
+    "success_criteria": [
+      "The gripper lifts the red cube clear of the work surface.",
+      "The robot releases the red cube completely inside the bowl.",
+      "The task finishes within 30 seconds without human contact with the follower arm."
+    ],
+    "failure_criteria": [
+      "The cube is not released completely inside the bowl.",
+      "The task exceeds 30 seconds.",
+      "The operator performs an emergency stop or touches the follower arm.",
+      "The robot, camera, recorder, or control process disconnects."
+    ]
+  },
+  "hardware": {
+    "robot_model": "SO-ARM101",
+    "follower": {
+      "lerobot_type": "so101_follower",
+      "id": "follower_arm",
+      "port": null,
+      "verified": false
+    },
+    "leader": {
+      "lerobot_type": "so101_leader",
+      "id": "leader_arm",
+      "port": null,
+      "verified": false
+    },
+    "camera": {
+      "name": "front",
+      "type": "opencv",
+      "index_or_path": null,
+      "width": 640,
+      "height": 480,
+      "fps": 30,
+      "verified": false
+    },
+    "emergency_stop": {
+      "method": "operator removes follower motor power",
+      "verified": false
+    }
+  },
+  "software": {
+    "legacy_reference": {
+      "python": "3.12.13",
+      "lerobot": "0.5.1",
+      "environment": "~/Documents/projects/lerobot-experiments/.venv",
+      "read_only": true
+    },
+    "edge": {
+      "os": "macOS arm64",
+      "python": "3.12",
+      "lerobot": "0.6.0",
+      "environment": ".venv"
+    },
+    "training": {
+      "provider": "RunPod",
+      "gpu": "NVIDIA A100 80 GB",
+      "device": "cuda"
+    }
+  },
+  "artifacts": {
+    "dataset_repo": "yanizhang/so-arm101-red-cube-to-bowl-v1",
+    "policy_repo": "yanizhang/smolvla-so-arm101-red-cube-to-bowl-v1"
+  }
+}
