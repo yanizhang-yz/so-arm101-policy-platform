@@ -1,14 +1,20 @@
-# SO-ARM101 Policy Platform
+# SO-ARM101 SmolVLA Learning Lab
 
-A learning-first, production-shaped platform for serving a robot policy to an
-SO-ARM101 arm.
+This repository follows one real robot policy from demonstrations to training,
+GPU inference, robot execution, benchmarking, and production-oriented serving.
 
-The first implementation runs locally on macOS with Python, FastAPI, PyTorch,
-and CPU or MPS. Later milestones preserve the same system boundaries while
-adding a real LeRobot adapter, an NVIDIA cloud GPU, gRPC, C++/ROS 2, a Rust
-gateway, and TensorRT.
+The first task is deliberately narrow:
 
-The approved design is documented in
-[`docs/superpowers/specs/2026-07-16-so-arm101-policy-platform-design.md`](docs/superpowers/specs/2026-07-16-so-arm101-policy-platform-design.md).
+> Pick up a red cube and place it in a bowl with an SO-ARM101.
 
-Status: design review before implementation planning.
+The selected policy is Hugging Face LeRobot's `lerobot/smolvla_base`, fine-tuned
+on demonstrations recorded with this SO-ARM101. Model training and inference run
+on rented NVIDIA GPUs. The Mac remains the robot-side computer for cameras,
+teleoperation, action execution, and safety.
+
+Start with [`docs/ROADMAP.md`](docs/ROADMAP.md). It explains what we are doing,
+why the stages are ordered this way, what should be learned, and what evidence
+must exist before moving forward.
+
+Important: the repository is currently in the roadmap and environment-verification
+stage. It does not yet contain autonomous robot-control code.
