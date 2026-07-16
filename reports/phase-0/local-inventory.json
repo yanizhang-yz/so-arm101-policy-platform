@@ -1,0 +1,43 @@
+{
+  "active_lerobot": {
+    "available": true,
+    "lerobot": "0.6.0",
+    "python": "3.12.13"
+  },
+  "captured_at_utc": "2026-07-16T22:45:39.029593+00:00",
+  "devices": {
+    "camera_names": [],
+    "serial_ports": []
+  },
+  "legacy_lerobot": {
+    "available": true,
+    "lerobot": "0.5.1",
+    "python": "3.12.13"
+  },
+  "platform": {
+    "machine": "arm64",
+    "python": "3.12.13",
+    "release": "25.5.0",
+    "system": "Darwin"
+  },
+  "tools": {
+    "ffmpeg": {
+      "available": true,
+      "path": "/opt/homebrew/bin/ffmpeg",
+      "returncode": 0,
+      "version": "ffmpeg version 8.1.1 Copyright (c) 2000-2026 the FFmpeg developers"
+    },
+    "git": {
+      "available": true,
+      "path": "/opt/homebrew/bin/git",
+      "returncode": 0,
+      "version": "git version 2.47.1"
+    },
+    "uv": {
+      "available": true,
+      "path": "/opt/homebrew/bin/uv",
+      "returncode": 0,
+      "version": "uv 0.11.8 (Homebrew 2026-04-27 aarch64-apple-darwin)"
+    }
+  }
+}
