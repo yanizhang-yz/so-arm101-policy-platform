@@ -59,22 +59,20 @@ and configuration instead.
 
 ### Preview the Front Camera
 
-Camera indices belong to the API that discovers them. LeRobot/OpenCV currently
-maps `W1` to index `0`, while macOS AVFoundation (used by `ffplay`) maps `W1` to
-index `1`. Reusing an index across those APIs can open the wrong camera.
+Camera indices belong to the API that discovers them and can change after a
+device reconnects. Reusing a saved OpenCV or AVFoundation index can open the
+wrong camera.
 
-Use this command for a live 640x480 preview of `W1`:
+Use the name-resolving helper for a live 640x480 preview of `W1`:
 
 ```bash
-ffplay -f avfoundation \
-  -framerate 30 \
-  -video_size 640x480 \
-  -pixel_format uyvy422 \
-  -i "1:none"
+uv run python scripts/preview_camera.py --name W1
 ```
 
-Press `q` to close the preview before LeRobot opens the camera. If cameras are
-disconnected or added, list AVFoundation devices again with:
+The helper lists AVFoundation devices, resolves the current exact-name match,
+prints the selected index, and launches `ffplay`. Focus the preview window and
+press `q`, or press `Ctrl-C` in the terminal, to close it before LeRobot opens
+the camera. To inspect the raw AVFoundation list manually:
 
 ```bash
 ffmpeg -hide_banner -f avfoundation -list_devices true -i ""
@@ -96,6 +94,8 @@ control.
 - the local inventory report is reproducible and contains no secrets
 - leader port, follower port, and camera are verified through the final dock
   topology
-- the camera view must be tightened to the follower workspace before recording
+- the camera view excludes the leader and operator and covers the follower
+  workspace; extra cubes must be removed and the full motion envelope checked
+  before recording
 - the follower power-cutoff procedure remains unverified
 - the next physical command and its safety conditions are understood

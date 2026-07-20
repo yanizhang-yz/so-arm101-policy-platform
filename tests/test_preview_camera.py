@@ -1,7 +1,13 @@
+from subprocess import CompletedProcess
+from unittest.mock import patch
+
 import pytest
 
 from scripts.preview_camera import (
     CameraDevice,
+    build_ffplay_command,
+    discover_video_devices,
+    main,
     parse_video_devices,
     resolve_camera,
     validate_preview_settings,
@@ -62,3 +68,57 @@ def test_duplicate_camera_name_is_rejected():
 def test_rejects_nonpositive_preview_settings(width, height, fps):
     with pytest.raises(ValueError, match="must be positive"):
         validate_preview_settings(width, height, fps)
+
+
+def test_discovery_accepts_ffmpeg_nonzero_exit_when_device_list_is_present():
+    completed = CompletedProcess(
+        args=[],
+        returncode=1,
+        stdout="",
+        stderr=DEVICE_LIST_INDEX_ZERO,
+    )
+    with patch("scripts.preview_camera.subprocess.run", return_value=completed):
+        assert discover_video_devices() == [
+            CameraDevice(0, "W1"),
+            CameraDevice(1, "MacBook Pro Camera"),
+        ]
+
+
+def test_builds_ffplay_command_for_resolved_device():
+    assert build_ffplay_command(CameraDevice(0, "W1"), 640, 480, 30) == [
+        "ffplay",
+        "-f",
+        "avfoundation",
+        "-framerate",
+        "30",
+        "-video_size",
+        "640x480",
+        "-pixel_format",
+        "uyvy422",
+        "-i",
+        "0:none",
+    ]
+
+
+def test_main_reports_missing_ffplay(capsys):
+    with patch("scripts.preview_camera.shutil.which", side_effect=["/usr/bin/ffmpeg", None]):
+        assert main(["--name", "W1"]) == 2
+
+    assert "ffmpeg and ffplay must both be installed" in capsys.readouterr().err
+
+
+def test_main_handles_terminal_interrupt_without_traceback(capsys):
+    with (
+        patch(
+            "scripts.preview_camera.shutil.which",
+            side_effect=["/usr/bin/ffmpeg", "/usr/bin/ffplay"],
+        ),
+        patch(
+            "scripts.preview_camera.discover_video_devices",
+            return_value=[CameraDevice(0, "W1")],
+        ),
+        patch("scripts.preview_camera.subprocess.run", side_effect=KeyboardInterrupt),
+    ):
+        assert main(["--name", "W1"]) == 130
+
+    assert "Preview stopped." in capsys.readouterr().err
