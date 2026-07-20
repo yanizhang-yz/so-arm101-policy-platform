@@ -29,7 +29,7 @@ stable release is selected because it contains the current rollout, dependency,
 dataset, and deployment interfaces we intend to learn. Isolation means an upgrade
 cannot destroy the known-working environment.
 
-## Current Read-Only Snapshot
+## Initial Read-Only Snapshot
 
 - macOS 26.5 on Apple Silicon arm64
 - system `python3` is 3.9.6 and must not receive project packages
@@ -38,6 +38,24 @@ cannot destroy the known-working environment.
 - no SO-ARM101 serial devices were connected during the snapshot
 - no external camera was visible during the snapshot
 - the earlier LeRobot source checkout has user changes and must not be altered
+
+## Connected Hardware Snapshot
+
+On 2026-07-20, the intended final USB topology was verified with the leader,
+follower, and one external camera connected through the powered WAVLINK dock:
+
+- leader: `/dev/tty.usbmodem5B415319781`
+- follower: `/dev/tty.usbmodem5B415325701`
+- logical camera `front`: physical device `W1`, OpenCV index `0`
+- camera capture: 1920x1080 at approximately 30 FPS during discovery
+
+The recording configuration intentionally requests 640x480 at 30 FPS. OpenCV
+camera indices can change after devices are disconnected, so the camera finder
+must be rerun before recording if the USB topology changes.
+
+Raw discovery frames are local-only because they can contain people and private
+room imagery. They are excluded from Git; the repository records device metadata
+and configuration instead.
 
 ## Safety Gate
 
@@ -53,6 +71,8 @@ control.
 - the experiment JSON is valid
 - the isolated LeRobot environment imports successfully
 - the local inventory report is reproducible and contains no secrets
-- leader port, follower port, and camera remain explicitly unverified until the
-  hardware is connected
+- leader port, follower port, and camera are verified through the final dock
+  topology
+- the camera view must be tightened to the follower workspace before recording
+- the follower power-cutoff procedure remains unverified
 - the next physical command and its safety conditions are understood

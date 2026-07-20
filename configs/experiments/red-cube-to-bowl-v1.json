@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment_id": "so-arm101-red-cube-to-bowl-v1",
-  "status": "hardware_pending",
+  "status": "hardware_discovered",
   "task": {
     "instruction": "Pick up the red cube and place it in the bowl.",
     "timeout_s": 30,
@@ -33,23 +33,24 @@
     "follower": {
       "lerobot_type": "so101_follower",
       "id": "follower_arm",
-      "port": null,
-      "verified": false
+      "port": "/dev/tty.usbmodem5B415325701",
+      "verified": true
     },
     "leader": {
       "lerobot_type": "so101_leader",
       "id": "leader_arm",
-      "port": null,
-      "verified": false
+      "port": "/dev/tty.usbmodem5B415319781",
+      "verified": true
     },
     "camera": {
       "name": "front",
+      "device_name": "W1",
       "type": "opencv",
-      "index_or_path": null,
+      "index_or_path": 0,
       "width": 640,
       "height": 480,
       "fps": 30,
-      "verified": false
+      "verified": true
     },
     "emergency_stop": {
       "method": "operator removes follower motor power",

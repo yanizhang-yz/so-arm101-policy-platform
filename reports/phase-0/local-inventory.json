@@ -4,10 +4,18 @@
     "lerobot": "0.6.0",
     "python": "3.12.13"
   },
-  "captured_at_utc": "2026-07-16T22:45:39.029593+00:00",
+  "captured_at_utc": "2026-07-20T22:48:55.114186+00:00",
   "devices": {
-    "camera_names": [],
-    "serial_ports": []
+    "camera_names": [
+      "MacBook Pro Camera",
+      "W1"
+    ],
+    "serial_ports": [
+      "/dev/cu.usbmodem5B415319781",
+      "/dev/cu.usbmodem5B415325701",
+      "/dev/tty.usbmodem5B415319781",
+      "/dev/tty.usbmodem5B415325701"
+    ]
   },
   "legacy_lerobot": {
     "available": true,
