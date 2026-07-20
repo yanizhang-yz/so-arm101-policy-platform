@@ -57,6 +57,29 @@ Raw discovery frames are local-only because they can contain people and private
 room imagery. They are excluded from Git; the repository records device metadata
 and configuration instead.
 
+### Preview the Front Camera
+
+Camera indices belong to the API that discovers them. LeRobot/OpenCV currently
+maps `W1` to index `0`, while macOS AVFoundation (used by `ffplay`) maps `W1` to
+index `1`. Reusing an index across those APIs can open the wrong camera.
+
+Use this command for a live 640x480 preview of `W1`:
+
+```bash
+ffplay -f avfoundation \
+  -framerate 30 \
+  -video_size 640x480 \
+  -pixel_format uyvy422 \
+  -i "1:none"
+```
+
+Press `q` to close the preview before LeRobot opens the camera. If cameras are
+disconnected or added, list AVFoundation devices again with:
+
+```bash
+ffmpeg -hide_banner -f avfoundation -list_devices true -i ""
+```
+
 ## Safety Gate
 
 Before motor commands, the operator must verify the follower power cutoff, clear
