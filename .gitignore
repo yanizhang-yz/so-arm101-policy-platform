@@ -10,6 +10,7 @@ build/
 dist/
 results/
 reports/phase-0/captured-images/
+reports/phase-1/calibration-backups/
 checkpoints/
 models/
 *.onnx
