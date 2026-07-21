@@ -2,7 +2,7 @@
 
 Date: 2026-07-21
 
-Status: stability gate passed; short teleoperation video remains
+Status: complete
 
 ## Verified Configuration
 
@@ -74,6 +74,11 @@ Observed result:
 
 This exceeds the roadmap's ten-minute stability requirement.
 
+The visual artifact focuses on the working follower arm and task workspace.
+The leader arm is intentionally outside the frame because its physical location
+does not define the follower's coordinate system; it supplies joint commands
+through the calibrated teleoperation mapping.
+
 ## Failure Investigated
 
 The first camera-plus-Rerun attempt failed on the follower's initial synchronous
@@ -103,7 +108,7 @@ smoothing algorithm. Returning to the official baseline restored normal motion.
 - [x] Stable W1 camera preview
 - [x] Leader-to-follower teleoperation
 - [x] At least ten minutes without disconnects or unsafe motion
-- [ ] Short teleoperation video
+- [x] Short follower-arm teleoperation video
 
-After the video is recorded, Phase 1 is complete and Phase 2 dataset recording
-can begin.
+Phase 1 is complete. Phase 2 can now record and inspect the first LeRobot
+dataset episodes.

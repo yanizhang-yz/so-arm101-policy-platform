@@ -2,7 +2,7 @@
 
 Date: 2026-07-16
 
-Status: Phase 1 in progress; integrated hardware stability verified
+Status: Phase 1 complete; Phase 2 dataset recording is next
 
 ## 1. The Project in One Sentence
 
@@ -149,7 +149,8 @@ Estimate: 3 to 5 days
 Current evidence is recorded in
 [`phases/01-hardware-calibration-teleoperation.md`](phases/01-hardware-calibration-teleoperation.md).
 The integrated camera and teleoperation stack passed a 16-minute stability run.
-The remaining completion artifact is a short teleoperation video.
+A follower-focused teleoperation recording supplies the visual evidence without
+implying that the leader and follower need matching physical placement.
 
 Work:
 
