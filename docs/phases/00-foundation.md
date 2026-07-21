@@ -87,6 +87,12 @@ a time, and confirm that the configured IDs still locate valid calibration files
 Phase 0 does not run motor setup, calibration, teleoperation, or autonomous
 control.
 
+On 2026-07-21, the operator confirmed the follower motor-power cutoff and
+completed a power-off sweep of the task motion envelope. LeRobot's local
+calibration store contains `follower_arm.json` and `leader_arm.json`; both files
+contain entries for all six SO-ARM101 joints. Calibration accuracy will be
+checked under controlled motion in Phase 1.
+
 ## Completion Gate
 
 - the experiment JSON is valid
@@ -95,7 +101,8 @@ control.
 - leader port, follower port, and camera are verified through the final dock
   topology
 - the camera view excludes the leader and operator and covers the follower
-  workspace; extra cubes must be removed and the full motion envelope checked
-  before recording
-- the follower power-cutoff procedure remains unverified
+  workspace
+- extra cubes are removed and the power-off task motion envelope is clear
+- the follower motor-power cutoff is verified
+- the configured leader and follower IDs locate six-joint calibration files
 - the next physical command and its safety conditions are understood

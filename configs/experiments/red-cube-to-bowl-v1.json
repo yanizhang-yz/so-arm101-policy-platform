@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment_id": "so-arm101-red-cube-to-bowl-v1",
-  "status": "hardware_discovered",
+  "status": "phase_0_complete",
   "task": {
     "instruction": "Pick up the red cube and place it in the bowl.",
     "timeout_s": 30,
@@ -54,7 +54,7 @@
     },
     "emergency_stop": {
       "method": "operator removes follower motor power",
-      "verified": false
+      "verified": true
     }
   },
   "software": {
