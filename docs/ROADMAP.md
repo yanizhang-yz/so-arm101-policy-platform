@@ -2,7 +2,7 @@
 
 Date: 2026-07-16
 
-Status: approved direction; implementation has not started
+Status: Phase 1 in progress; integrated hardware stability verified
 
 ## 1. The Project in One Sentence
 
@@ -145,6 +145,11 @@ Completion evidence:
 ### Phase 1: Hardware, Calibration, Camera, and Teleoperation
 
 Estimate: 3 to 5 days
+
+Current evidence is recorded in
+[`phases/01-hardware-calibration-teleoperation.md`](phases/01-hardware-calibration-teleoperation.md).
+The integrated camera and teleoperation stack passed a 16-minute stability run.
+The remaining completion artifact is a short teleoperation video.
 
 Work:
 

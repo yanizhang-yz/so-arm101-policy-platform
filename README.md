@@ -18,11 +18,15 @@ must exist before moving forward.
 
 Supporting guides:
 
+- [`docs/phases/01-hardware-calibration-teleoperation.md`](docs/phases/01-hardware-calibration-teleoperation.md)
+  records the verified Phase 1 hardware, camera, calibration, and stability
+  evidence.
 - [`docs/decisions/0001-policy-and-gpu-strategy.md`](docs/decisions/0001-policy-and-gpu-strategy.md)
   explains the selected model, training strategy, cloud, and serving baseline.
 - [`docs/guides/hardware-to-policy-playbook.md`](docs/guides/hardware-to-policy-playbook.md)
   provides a reusable method for evaluating future robots, models, and serving
   stacks.
 
-Important: the repository is currently in the roadmap and environment-verification
-stage. It does not yet contain autonomous robot-control code.
+Important: the repository is currently validating the real data-collection
+stack. Stable camera-enabled teleoperation is verified, but it does not yet
+contain autonomous robot-control code.

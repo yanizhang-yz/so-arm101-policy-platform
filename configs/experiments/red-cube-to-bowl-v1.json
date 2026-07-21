@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment_id": "so-arm101-red-cube-to-bowl-v1",
-  "status": "phase_0_complete",
+  "status": "phase_1_in_progress",
   "task": {
     "instruction": "Pick up the red cube and place it in the bowl.",
     "timeout_s": 30,
