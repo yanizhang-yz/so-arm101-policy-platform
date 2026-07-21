@@ -9,6 +9,7 @@ __pycache__/
 build/
 dist/
 results/
+datasets/
 reports/phase-0/captured-images/
 reports/phase-1/calibration-backups/
 outputs/captured_images/

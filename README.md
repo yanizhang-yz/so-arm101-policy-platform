@@ -18,6 +18,9 @@ must exist before moving forward.
 
 Supporting guides:
 
+- [`docs/phases/02-record-and-inspect-dataset.md`](docs/phases/02-record-and-inspect-dataset.md)
+  starts Phase 2 with a three-episode local pilot before full dataset
+  collection.
 - [`docs/phases/01-hardware-calibration-teleoperation.md`](docs/phases/01-hardware-calibration-teleoperation.md)
   records the verified Phase 1 hardware, camera, calibration, and stability
   evidence.
@@ -27,6 +30,6 @@ Supporting guides:
   provides a reusable method for evaluating future robots, models, and serving
   stacks.
 
-Important: the repository is currently validating the real data-collection
-stack. Stable camera-enabled teleoperation is verified, but it does not yet
-contain autonomous robot-control code.
+Important: the repository is currently recording and inspecting teleoperated
+training data. Stable camera-enabled teleoperation is verified, but it does not
+yet contain autonomous robot-control code.
