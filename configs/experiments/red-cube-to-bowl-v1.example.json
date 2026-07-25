@@ -33,13 +33,13 @@
     "follower": {
       "lerobot_type": "so101_follower",
       "id": "follower_arm",
-      "port": "/dev/tty.usbmodem5B415325701",
+      "port": "${SO101_FOLLOWER_PORT}",
       "verified": true
     },
     "leader": {
       "lerobot_type": "so101_leader",
       "id": "leader_arm",
-      "port": "/dev/tty.usbmodem5B415319781",
+      "port": "${SO101_LEADER_PORT}",
       "verified": true
     },
     "camera": {

@@ -7,6 +7,17 @@ The first task is deliberately narrow:
 
 > Pick up a red cube and place it in a bowl with an SO-ARM101.
 
+## Current Evidence
+
+| Stage | Status | Evidence |
+|---|---|---|
+| Reproducible environment | Complete | pinned Python 3.12 and LeRobot 0.6.0 |
+| Hardware and calibration | Complete | leader/follower calibration and safety procedure |
+| Camera + teleoperation | Complete | 16-minute integrated run with clean shutdown |
+| Dataset recording | Active | three-episode pilot before the full dataset |
+| GPU fine-tuning | Not started | begins only after the dataset quality gate |
+| Remote policy inference | Not started | measured after checkpoint correctness |
+
 The selected policy is Hugging Face LeRobot's `lerobot/smolvla_base`, fine-tuned
 on demonstrations recorded with this SO-ARM101. Model training and inference run
 on rented NVIDIA GPUs. The Mac remains the robot-side computer for cameras,

@@ -16,7 +16,7 @@ later failures can be assigned to the correct layer.
 The first task is one red cube into one bowl within 30 seconds. We collect 50
 successful demonstrations across five marked cube positions, ten per position.
 The exact machine-readable definition is in
-`configs/experiments/red-cube-to-bowl-v1.json`.
+`configs/experiments/red-cube-to-bowl-v1.example.json`.
 
 ## Version Decision
 
@@ -44,8 +44,8 @@ cannot destroy the known-working environment.
 On 2026-07-20, the intended final USB topology was verified with the leader,
 follower, and one external camera connected through the powered WAVLINK dock:
 
-- leader: `/dev/tty.usbmodem5B415319781`
-- follower: `/dev/tty.usbmodem5B415325701`
+- leader serial port (redacted)
+- follower serial port (redacted)
 - logical camera `front`: physical device `W1`, OpenCV index `0`
 - camera capture: 1920x1080 at approximately 30 FPS during discovery
 

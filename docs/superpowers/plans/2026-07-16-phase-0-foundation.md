@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Do not modify `/Users/yanizhang/Documents/projects/lerobot-experiments` or its `.venv`.
+- Do not modify `<legacy-lerobot-checkout>` or its `.venv`.
 - Do not run motor setup, calibration, teleoperation, or autonomous control while the arm is disconnected.
 - Do not guess serial ports or camera indexes; represent unverified hardware as JSON `null` with `verified: false`.
 - Do not install packages into `/usr/bin/python3`.
@@ -488,7 +488,7 @@ git commit -m "feat: add Phase 0 inventory probe"
 
 ```bash
 uv run python scripts/phase0_probe.py \
-  --legacy-python /Users/yanizhang/Documents/projects/lerobot-experiments/.venv/bin/python \
+  --legacy-python <legacy-lerobot-python> \
   --output reports/phase-0/local-inventory.json
 ```
 
