@@ -6,8 +6,8 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".json", ".md", ".py", ".toml", ".yml", ".yaml"}
 FORBIDDEN = {
-    "absolute macOS user path": re.compile(r"/Users/"),
-    "absolute Linux user path": re.compile(r"/home/"),
+    "absolute macOS user path": re.compile(r"/" r"Users/"),
+    "absolute Linux user path": re.compile(r"/" r"home/"),
     "concrete USB modem identifier": re.compile(r"usbmodem[0-9A-Fa-f]{8,}"),
 }
 
