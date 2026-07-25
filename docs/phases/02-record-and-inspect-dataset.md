@@ -79,7 +79,10 @@ Place the follower in a safe neutral pose, put the cube at `center`, keep the
 bowl at its frozen location, and activate the virtual environment:
 
 ```bash
-cd "/Users/yanizhang/Documents/Inference engineer/so-arm101-policy-platform"
+export FOLLOWER_PORT="/dev/tty.usbmodemFOLLOWER"
+export LEADER_PORT="/dev/tty.usbmodemLEADER"
+
+cd so-arm101-policy-platform
 source .venv/bin/activate
 ```
 
@@ -88,11 +91,11 @@ Then run:
 ```bash
 lerobot-record \
   --robot.type=so101_follower \
-  --robot.port=/dev/tty.usbmodem5B415325701 \
+  --robot.port="$FOLLOWER_PORT" \
   --robot.id=follower_arm \
   --robot.cameras='{front: {type: opencv, index_or_path: 0, width: 640, height: 480, fps: 30}}' \
   --teleop.type=so101_leader \
-  --teleop.port=/dev/tty.usbmodem5B415319781 \
+  --teleop.port="$LEADER_PORT" \
   --teleop.id=leader_arm \
   --dataset.repo_id=yanizhang/so-arm101-red-cube-to-bowl-pilot \
   --dataset.root=datasets/phase-2/pilot-v1 \

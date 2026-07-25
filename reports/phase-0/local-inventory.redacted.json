@@ -7,14 +7,11 @@
   "captured_at_utc": "2026-07-20T22:48:55.114186+00:00",
   "devices": {
     "camera_names": [
-      "MacBook Pro Camera",
-      "W1"
+      "external_workspace_camera"
     ],
     "serial_ports": [
-      "/dev/cu.usbmodem5B415319781",
-      "/dev/cu.usbmodem5B415325701",
-      "/dev/tty.usbmodem5B415319781",
-      "/dev/tty.usbmodem5B415325701"
+      "<redacted: leader>",
+      "<redacted: follower>"
     ]
   },
   "legacy_lerobot": {

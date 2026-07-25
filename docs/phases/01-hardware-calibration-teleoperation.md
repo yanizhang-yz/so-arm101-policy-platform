@@ -7,8 +7,8 @@ Status: complete
 ## Verified Configuration
 
 - LeRobot: 0.6.0 in the repository `.venv`
-- Follower: SO-ARM101 at `/dev/tty.usbmodem5B415325701`
-- Leader: SO-ARM101 at `/dev/tty.usbmodem5B415319781`
+- Follower: SO-ARM101 serial port (redacted)
+- Leader: SO-ARM101 serial port (redacted)
 - Front camera: W1, resolved to OpenCV index `0` in this USB topology
 - Camera mode: 640 x 480 at 30 frames per second
 - USB topology: leader, follower, and camera connected through the powered hub
@@ -33,12 +33,15 @@ The known-good baseline uses LeRobot's standard command without custom motion
 limits, forced loop rates, or time limits:
 
 ```bash
+export FOLLOWER_PORT="/dev/tty.usbmodemFOLLOWER"
+export LEADER_PORT="/dev/tty.usbmodemLEADER"
+
 .venv/bin/lerobot-teleoperate \
   --robot.type=so101_follower \
-  --robot.port=/dev/tty.usbmodem5B415325701 \
+  --robot.port="$FOLLOWER_PORT" \
   --robot.id=follower_arm \
   --teleop.type=so101_leader \
-  --teleop.port=/dev/tty.usbmodem5B415319781 \
+  --teleop.port="$LEADER_PORT" \
   --teleop.id=leader_arm
 ```
 
@@ -50,15 +53,18 @@ Rerun is launched as a child executable, so the virtual environment must be
 activated before running the command by name:
 
 ```bash
+export FOLLOWER_PORT="/dev/tty.usbmodemFOLLOWER"
+export LEADER_PORT="/dev/tty.usbmodemLEADER"
+
 source .venv/bin/activate
 
 lerobot-teleoperate \
   --robot.type=so101_follower \
-  --robot.port=/dev/tty.usbmodem5B415325701 \
+  --robot.port="$FOLLOWER_PORT" \
   --robot.id=follower_arm \
   --robot.cameras='{front: {type: opencv, index_or_path: 0, width: 640, height: 480, fps: 30}}' \
   --teleop.type=so101_leader \
-  --teleop.port=/dev/tty.usbmodem5B415319781 \
+  --teleop.port="$LEADER_PORT" \
   --teleop.id=leader_arm \
   --display_data=true
 ```

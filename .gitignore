@@ -12,6 +12,8 @@ results/
 datasets/
 reports/phase-0/captured-images/
 reports/phase-1/calibration-backups/
+configs/experiments/*.local.json
+reports/phase-0/local-inventory.json
 outputs/captured_images/
 checkpoints/
 models/
