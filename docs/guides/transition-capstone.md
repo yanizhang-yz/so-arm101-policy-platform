@@ -41,7 +41,8 @@ currently satisfies this gate.
 
 ## Evaluation Gate
 
-**Planned.** The [offline-validation and real-arm inference phases](../ROADMAP.md#phase-5-validate-the-checkpoint-before-moving-the-robot)
+**Planned.** The [offline-validation phase](../ROADMAP.md#phase-5-validate-the-checkpoint-before-moving-the-robot)
+and [bounded real-arm inference phase](../ROADMAP.md#phase-6-run-remote-gpu-inference-on-the-so-arm101)
 own this evidence. There are no committed autonomous task trials, success-rate
 measurements, or policy failure results.
 
@@ -67,7 +68,7 @@ No committed cost record exists yet.
 | Camera-enabled teleoperation | verified | [Phase 1](../phases/01-hardware-calibration-teleoperation.md) |
 | Dataset recording | active | [Phase 2](../phases/02-record-and-inspect-dataset.md) |
 | GPU training | planned | [Roadmap Phase 4](../ROADMAP.md#phase-4-fine-tune-smolvla) |
-| Autonomous evaluation | planned | [Roadmap Phases 5–6](../ROADMAP.md#phase-5-validate-the-checkpoint-before-moving-the-robot) |
+| Autonomous evaluation | planned | [Roadmap Phase 5](../ROADMAP.md#phase-5-validate-the-checkpoint-before-moving-the-robot) and [Phase 6](../ROADMAP.md#phase-6-run-remote-gpu-inference-on-the-so-arm101) |
 | Production serving | planned | [Roadmap Phases 7–8](../ROADMAP.md#phase-7-benchmark-the-real-serving-path) |
 
 ## Simulation Alternative
