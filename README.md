@@ -3,6 +3,13 @@
 This repository follows one real robot policy from demonstrations to training,
 GPU inference, robot execution, benchmarking, and production-oriented serving.
 
+## Part of the Software-to-Robotics-Inference Path
+
+This repository is the advanced real-arm capstone for
+[M3 — Optional Real-Arm Capstone](https://github.com/yanizhang-yz/software-to-robotics-inference/blob/main/docs/milestones/m3-real-arm-capstone.md)
+in the Software-to-Robotics-Inference guide. Use the
+[capstone map](docs/guides/transition-capstone.md) to follow its evidence gates.
+
 The first task is deliberately narrow:
 
 > Pick up a red cube and place it in a bowl with an SO-ARM101.
