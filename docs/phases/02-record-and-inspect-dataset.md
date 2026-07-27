@@ -76,12 +76,12 @@ dataset.
 ## Three-Episode Local Pilot
 
 Place the follower in a safe neutral pose, put the cube at `center`, keep the
-bowl at its frozen location, and activate the virtual environment:
+bowl at its frozen location, and activate the virtual environment. First use
+LeRobot's port-discovery workflow and export the locally resolved device paths
+as `FOLLOWER_PORT` and `LEADER_PORT`; those paths belong in the shell
+environment, not Git.
 
 ```bash
-export FOLLOWER_PORT="/dev/tty.usbmodemFOLLOWER"
-export LEADER_PORT="/dev/tty.usbmodemLEADER"
-
 cd so-arm101-policy-platform
 source .venv/bin/activate
 ```

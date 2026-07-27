@@ -2,7 +2,11 @@
 
 Date: 2026-07-16
 
-Status: Phase 1 complete; Phase 2 dataset recording is next
+Status: Phase 1 complete; Phase 2 dataset recording is active
+
+For the concise evidence-state map used by the transition portfolio, see the
+[Real-Arm Transition Capstone](guides/transition-capstone.md). The phase roadmap
+below remains the authoritative implementation sequence.
 
 ## 1. The Project in One Sentence
 

@@ -7,8 +7,8 @@ Status: complete
 ## Verified Configuration
 
 - LeRobot: 0.6.0 in the repository `.venv`
-- Follower: SO-ARM101 serial port (redacted)
-- Leader: SO-ARM101 serial port (redacted)
+- Follower: SO-ARM101 serial port resolved locally and intentionally not committed
+- Leader: SO-ARM101 serial port resolved locally and intentionally not committed
 - Front camera: W1, resolved to OpenCV index `0` in this USB topology
 - Camera mode: 640 x 480 at 30 frames per second
 - USB topology: leader, follower, and camera connected through the powered hub
@@ -27,15 +27,19 @@ The restored files were verified byte-for-byte against their backups.
 Calibration data and backups stay local because they describe this physical
 pair of arms. They are intentionally excluded from Git.
 
+## Port Prerequisite
+
+Before running either command, use LeRobot's port-discovery workflow to resolve
+the follower and leader independently, then export the local results as
+`FOLLOWER_PORT` and `LEADER_PORT` in the current shell. Device paths describe
+one workstation and must not be committed.
+
 ## Official Teleoperation Baseline
 
 The known-good baseline uses LeRobot's standard command without custom motion
 limits, forced loop rates, or time limits:
 
 ```bash
-export FOLLOWER_PORT="/dev/tty.usbmodemFOLLOWER"
-export LEADER_PORT="/dev/tty.usbmodemLEADER"
-
 .venv/bin/lerobot-teleoperate \
   --robot.type=so101_follower \
   --robot.port="$FOLLOWER_PORT" \
@@ -53,9 +57,6 @@ Rerun is launched as a child executable, so the virtual environment must be
 activated before running the command by name:
 
 ```bash
-export FOLLOWER_PORT="/dev/tty.usbmodemFOLLOWER"
-export LEADER_PORT="/dev/tty.usbmodemLEADER"
-
 source .venv/bin/activate
 
 lerobot-teleoperate \
