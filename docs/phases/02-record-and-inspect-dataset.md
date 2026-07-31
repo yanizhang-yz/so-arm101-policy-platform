@@ -144,15 +144,43 @@ the next listed position, and return the cube from the bowl. Reset activity is
 executed through teleoperation but is not written to the dataset. Press `n`
 when the reset is complete instead of waiting for the 30-second maximum.
 
+## Inspect the Pilot
+
+Run the quality gate before scaling collection:
+
+```bash
+python scripts/inspect_dataset.py \
+  --root datasets/phase-2/pilot-v1 \
+  --expected-episodes 3 \
+  --expected-fps 30
+```
+
+The inspector reads the JSON and Parquet dataset contract, validates every
+episode's frame indices and timestamps, and loads sample zero through
+`LeRobotDataset`. It does not infer task success from pixels; the operator must
+still review the video.
+
+The validated pilot contains 1,957 frames:
+
+| Episode | Frames | Duration |
+|---|---:|---:|
+| 0 | 649 | 21.633 s |
+| 1 | 686 | 22.867 s |
+| 2 | 622 | 20.733 s |
+
+The decoded sample has action shape `(6,)`, state shape `(6,)`, and W1 image
+shape `(3, 360, 640)`. All numeric values are finite, frame indices are
+contiguous, and timestamps advance at 30 Hz.
+
 ## Pilot Completion Gate
 
-- [ ] Three episodes save without a traceback.
-- [ ] All three videos show the complete task and the intended camera view.
-- [ ] State and action features have the expected six joint values.
-- [ ] Frame timestamps are monotonic and close to 30 Hz.
-- [ ] Episode lengths agree with the actual task duration.
-- [ ] One frame can be loaded through `LeRobotDataset` and inspected.
+- [x] Three episodes save without a traceback.
+- [x] All three videos show the complete task and the intended camera view.
+- [x] State and action features have the expected six joint values.
+- [x] Frame timestamps are monotonic and close to 30 Hz.
+- [x] Episode lengths agree with the actual task duration.
+- [x] One frame can be loaded through `LeRobotDataset` and inspected.
 - [ ] A deliberately rejected attempt does not appear as an accepted episode.
 
-After recording, the next repository tool will inspect feature names, tensor
-shapes, episode lengths, timestamps, and camera frames before any Hub upload.
+Complete the rejection-control exercise before recording the full dataset or
+uploading any episode to the Hub.
