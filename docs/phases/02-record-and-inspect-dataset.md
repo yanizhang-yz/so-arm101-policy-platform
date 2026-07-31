@@ -89,12 +89,18 @@ remove hands from the camera view before the next recording announcement.
 - Confirm each press by checking that the terminal prints
   `Right arrow key pressed. Exiting loop...`.
 - Press Left Arrow or `r` to discard the current episode and record it again.
+  The repository wrapper removes both its robot-data buffer and temporary
+  camera frames before the replacement begins.
 - Press Escape or `q` to stop the recording session.
 
 Keep the recording terminal focused if LeRobot reports that it is using
 terminal keyboard input. In LeRobot 0.6.0, stopping with `q` can still save the
 partial current episode, so prefer `r` when an attempt should not enter the
 dataset.
+
+`r` applies only to the current buffered episode, including its following
+reset window. If a mistake is discovered after the next episode has begun,
+stop recording and repair the saved dataset from a backup before continuing.
 
 Keep Rerun disabled during this pilot so it cannot take keyboard focus and so
 visualization does not add CPU work to the recording path. The W1 video is still
@@ -119,7 +125,7 @@ source .venv/bin/activate
 Then run:
 
 ```bash
-lerobot-record \
+python scripts/record_dataset.py \
   --robot.type=so101_follower \
   --robot.port="$FOLLOWER_PORT" \
   --robot.id=follower_arm \
@@ -195,6 +201,12 @@ real sample decodes through `LeRobotDataset`. Visual review confirms that the
 only saved video begins with the cube on the table and ends with it in the bowl;
 the rejected buffer is absent.
 
+Round 5 later exposed a longer-rejection edge case in LeRobot 0.6.0. Its
+non-streaming cleanup removed temporary `image_keys` but not `video_keys`; the
+first control passed only because the successful replacement was longer and
+overwrote every rejected frame. The repository's `record_dataset.py` wrapper
+now deletes both categories before delegating to LeRobot's original cleanup.
+
 The pilot quality gate is complete. Full dataset collection can now begin while
 the pilot and rejection-control roots remain local, ignored evidence.
 
@@ -222,7 +234,8 @@ nearer to follower base
 
 Freeze the five cube marks, bowl mark, camera mount, lighting, instruction,
 calibration, and neutral pose for all rounds. Record one round per process. A
-failed attempt is re-recorded with `r` and never consumes an episode index.
+failed attempt is re-recorded with `r` through `scripts/record_dataset.py` and
+never consumes an episode index.
 
 Rounds 5 and 10 form the ten-episode validation split. All other complete
 episodes form the 40-episode training split; frames from one episode are never
