@@ -65,10 +65,23 @@ An accepted episode must:
 - Avoid human contact with the follower arm.
 - Contain no camera, serial, or control-loop warning that invalidates timing.
 
+The first episode starts immediately after the recorder connects. Arrange the
+cube, bowl, follower pose, and leader pose before launching the command. The
+session then follows this timeline:
+
+```text
+record episode 0 -> unrecorded reset -> record episode 1
+                 -> unrecorded reset -> record episode 2 -> exit
+```
+
+Only move the cube by hand during an **unrecorded reset**. Finish the reset and
+remove hands from the camera view before the next recording announcement.
+
 ## Recording Controls
 
 - Let the 20-second timer expire to finish a normal episode.
-- Press Right Arrow or `n` to accept and end the current episode early.
+- Press Right Arrow or `n` to accept and end the current episode early. Confirm
+  that the terminal prints `Right arrow key pressed. Exiting loop...`.
 - Press Left Arrow or `r` to discard the current episode and record it again.
 - Press Escape or `q` to stop the recording session.
 
@@ -76,6 +89,9 @@ Keep the recording terminal focused if LeRobot reports that it is using
 terminal keyboard input. In LeRobot 0.6.0, stopping with `q` can still save the
 partial current episode, so prefer `r` when an attempt should not enter the
 dataset.
+
+If an existing dataset root already contains a pilot, use a new root for the
+next attempt. Do not overwrite the first pilot; it is useful debugging evidence.
 
 ## Three-Episode Local Pilot
 
@@ -106,14 +122,14 @@ lerobot-record \
   --dataset.single_task="Pick up the red cube and place it in the bowl." \
   --dataset.fps=30 \
   --dataset.episode_time_s=20 \
-  --dataset.reset_time_s=30 \
+  --dataset.reset_time_s=60 \
   --dataset.num_episodes=3 \
   --dataset.video=true \
   --dataset.push_to_hub=false \
   --display_data=true
 ```
 
-During each 30-second reset window, return the robot to its neutral pose, move
+During each 60-second reset window, return the robot to its neutral pose, move
 the cube to the next listed position, and return the cube from the bowl. Reset
 activity is executed through teleoperation but is not written to the dataset.
 
