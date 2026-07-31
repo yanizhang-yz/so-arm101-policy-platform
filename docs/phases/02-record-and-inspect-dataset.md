@@ -61,7 +61,9 @@ An accepted episode must:
 - Begin with the follower in the documented neutral pose.
 - Show both the cube and bowl clearly in the W1 image.
 - Lift the cube clear of the table and release it inside the bowl.
-- Finish within 20 seconds.
+- Finish within the 60-second pilot recording window. After the recording
+  workflow is comfortable, practice smoother demonstrations toward the
+  experiment's 30-second evaluation target.
 - Avoid human contact with the follower arm.
 - Contain no camera, serial, or control-loop warning that invalidates timing.
 
@@ -129,7 +131,7 @@ lerobot-record \
   --dataset.root=datasets/phase-2/pilot-v1 \
   --dataset.single_task="Pick up the red cube and place it in the bowl." \
   --dataset.fps=30 \
-  --dataset.episode_time_s=30 \
+  --dataset.episode_time_s=60 \
   --dataset.reset_time_s=30 \
   --dataset.num_episodes=3 \
   --dataset.video=true \
