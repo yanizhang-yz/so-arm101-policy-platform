@@ -52,6 +52,10 @@ Record three successful episodes with the cube starting at:
 Keep all other conditions fixed: W1 position, bowl position, lighting, task
 wording, camera resolution, frame rate, and calibration.
 
+The verified W1 recording mode is `640x360` at 30 FPS. Requesting `640x480`
+causes LeRobot to receive 360-pixel-high frames that do not match its declared
+feature shape, so the recording command must use the native height.
+
 An accepted episode must:
 
 - Begin with the follower in the documented neutral pose.
@@ -93,7 +97,7 @@ lerobot-record \
   --robot.type=so101_follower \
   --robot.port="$FOLLOWER_PORT" \
   --robot.id=follower_arm \
-  --robot.cameras='{front: {type: opencv, index_or_path: 0, width: 640, height: 480, fps: 30}}' \
+  --robot.cameras='{front: {type: opencv, index_or_path: 0, width: 640, height: 360, fps: 30}}' \
   --teleop.type=so101_leader \
   --teleop.port="$LEADER_PORT" \
   --teleop.id=leader_arm \
