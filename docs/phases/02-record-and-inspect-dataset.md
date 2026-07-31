@@ -79,9 +79,13 @@ remove hands from the camera view before the next recording announcement.
 
 ## Recording Controls
 
-- Let the 20-second timer expire to finish a normal episode.
-- Press Right Arrow or `n` to accept and end the current episode early. Confirm
-  that the terminal prints `Right arrow key pressed. Exiting loop...`.
+- The recording and reset timers are maximums, not mandatory waits.
+- During recording, press Right Arrow or `n` to accept and end the current
+  episode early.
+- During reset, press Right Arrow or `n` again when the next scene is ready to
+  start the next episode early.
+- Confirm each press by checking that the terminal prints
+  `Right arrow key pressed. Exiting loop...`.
 - Press Left Arrow or `r` to discard the current episode and record it again.
 - Press Escape or `q` to stop the recording session.
 
@@ -89,6 +93,10 @@ Keep the recording terminal focused if LeRobot reports that it is using
 terminal keyboard input. In LeRobot 0.6.0, stopping with `q` can still save the
 partial current episode, so prefer `r` when an attempt should not enter the
 dataset.
+
+Keep Rerun disabled during this pilot so it cannot take keyboard focus and so
+visualization does not add CPU work to the recording path. The W1 video is still
+recorded and will be inspected after the session.
 
 If an existing dataset root already contains a pilot, use a new root for the
 next attempt. Do not overwrite the first pilot; it is useful debugging evidence.
@@ -121,17 +129,18 @@ lerobot-record \
   --dataset.root=datasets/phase-2/pilot-v1 \
   --dataset.single_task="Pick up the red cube and place it in the bowl." \
   --dataset.fps=30 \
-  --dataset.episode_time_s=20 \
-  --dataset.reset_time_s=60 \
+  --dataset.episode_time_s=30 \
+  --dataset.reset_time_s=30 \
   --dataset.num_episodes=3 \
   --dataset.video=true \
   --dataset.push_to_hub=false \
-  --display_data=true
+  --display_data=false
 ```
 
-During each 60-second reset window, return the robot to its neutral pose, move
-the cube to the next listed position, and return the cube from the bowl. Reset
-activity is executed through teleoperation but is not written to the dataset.
+During each reset window, return the robot to its neutral pose, move the cube to
+the next listed position, and return the cube from the bowl. Reset activity is
+executed through teleoperation but is not written to the dataset. Press `n`
+when the reset is complete instead of waiting for the 30-second maximum.
 
 ## Pilot Completion Gate
 
