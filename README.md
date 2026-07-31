@@ -21,7 +21,7 @@ The first task is deliberately narrow:
 | Reproducible environment | Complete | pinned Python 3.12 and LeRobot 0.6.0 |
 | Hardware and calibration | Complete | leader/follower calibration and safety procedure |
 | Camera + teleoperation | Complete | 16-minute integrated run with clean shutdown |
-| Dataset recording | Active | pilot validated; rejection-control exercise remains |
+| Dataset recording | Active | pilot quality gate complete; ready for full collection |
 | GPU fine-tuning | Not started | begins only after the dataset quality gate |
 | Remote policy inference | Not started | measured after checkpoint correctness |
 

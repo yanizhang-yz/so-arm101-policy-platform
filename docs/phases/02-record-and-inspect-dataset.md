@@ -180,7 +180,20 @@ contiguous, and timestamps advance at 30 Hz.
 - [x] Frame timestamps are monotonic and close to 30 Hz.
 - [x] Episode lengths agree with the actual task duration.
 - [x] One frame can be loaded through `LeRobotDataset` and inspected.
-- [ ] A deliberately rejected attempt does not appear as an accepted episode.
+- [x] A deliberately rejected attempt does not appear as an accepted episode.
 
-Complete the rejection-control exercise before recording the full dataset or
-uploading any episode to the Hub.
+## Rejection-Control Evidence
+
+The rejection test used the separate local root
+`datasets/phase-2/rejection-control-v1`. The operator recorded a short invalid
+attempt, pressed `r`, completed the unrecorded reset, and then recorded one
+successful replacement.
+
+Inspection found exactly one accepted episode with 684 frames and a 22.800-second
+video. Its frame indices are contiguous, its timestamps advance at 30 Hz, and a
+real sample decodes through `LeRobotDataset`. Visual review confirms that the
+only saved video begins with the cube on the table and ends with it in the bowl;
+the rejected buffer is absent.
+
+The pilot quality gate is complete. Full dataset collection can now begin while
+the pilot and rejection-control roots remain local, ignored evidence.
