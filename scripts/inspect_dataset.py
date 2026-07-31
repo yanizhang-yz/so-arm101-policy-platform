@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import argparse
 import json
-from collections.abc import Callable, Mapping
+import sys
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -81,6 +83,24 @@ def _shape(value: object) -> tuple[int, ...]:
 
 def _result(name: str, passed: bool, success: str, failure: str) -> CheckResult:
     return CheckResult(name=name, passed=bool(passed), detail=success if passed else failure)
+
+
+def load_lerobot_sample(root: Path) -> Mapping[str, object]:
+    from lerobot.datasets.lerobot_dataset import LeRobotDataset
+
+    try:
+        dataset = LeRobotDataset(
+            repo_id=f"local/{root.name}",
+            root=root,
+            video_backend="pyav",
+        )
+        if len(dataset) == 0:
+            raise InspectionError("LeRobotDataset contains no frames")
+        return dataset[0]
+    except InspectionError:
+        raise
+    except Exception as exc:
+        raise InspectionError(f"LeRobotDataset could not decode sample zero: {exc}") from exc
 
 
 def inspect_dataset(
@@ -276,11 +296,18 @@ def inspect_dataset(
             )
         )
 
-    if sample_loader is None:
-        raise InspectionError("a LeRobot sample loader is required")
-    sample = sample_loader(root)
+    loader = sample_loader or load_lerobot_sample
+    try:
+        sample = loader(root)
+    except InspectionError:
+        raise
+    except Exception as exc:
+        raise InspectionError(f"sample zero could not be loaded: {exc}") from exc
     reported_sample_keys = ("action", "observation.state", *camera_features)
-    sample_shapes = {key: _shape(sample[key]) for key in reported_sample_keys}
+    try:
+        sample_shapes = {key: _shape(sample[key]) for key in reported_sample_keys}
+    except KeyError as exc:
+        raise InspectionError(f"decoded sample is missing feature {exc.args[0]}") from exc
     expected_camera_shapes = {
         key: (
             feature_shapes[key][2],
@@ -316,3 +343,68 @@ def inspect_dataset(
         sample_shapes=sample_shapes,
         checks=tuple(checks),
     )
+
+
+def format_report(report: InspectionReport) -> str:
+    status = "PASS" if report.passed else "FAIL"
+    lines = [
+        f"Dataset inspection: {status}",
+        f"Root: {report.root}",
+        f"Robot: {report.robot_type}",
+        f"Task: {report.task}",
+        f"FPS: {report.fps:g}",
+        f"Episodes: {report.total_episodes}",
+        f"Frames: {report.total_frames}",
+        "",
+        "Episodes:",
+    ]
+    for episode in report.episodes:
+        lines.append(
+            f"  Episode {episode.episode_index}: {episode.length} frames, "
+            f"{episode.duration_s:.3f} s, mean step {episode.mean_frame_period_s:.6f} s"
+        )
+
+    lines.extend(["", "Decoded sample shapes:"])
+    for name, shape in report.sample_shapes.items():
+        lines.append(f"  {name}: {shape}")
+
+    lines.extend(["", "Checks:"])
+    for check in report.checks:
+        check_status = "PASS" if check.passed else "FAIL"
+        lines.append(f"  [{check_status}] {check.detail}")
+
+    lines.extend(["", "Visual task success: HUMAN REVIEW REQUIRED"])
+    return "\n".join(lines)
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Inspect a local LeRobot dataset.")
+    parser.add_argument("--root", type=Path, required=True, help="Local LeRobot dataset root")
+    parser.add_argument("--expected-episodes", type=int, required=True)
+    parser.add_argument("--expected-fps", type=float, required=True)
+    return parser
+
+
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    sample_loader: SampleLoader | None = None,
+) -> int:
+    args = _parser().parse_args(argv)
+    try:
+        report = inspect_dataset(
+            args.root,
+            expected_episodes=args.expected_episodes,
+            expected_fps=args.expected_fps,
+            sample_loader=sample_loader,
+        )
+    except InspectionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    print(format_report(report))
+    return 0 if report.passed else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

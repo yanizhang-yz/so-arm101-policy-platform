@@ -5,7 +5,7 @@ import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from scripts.inspect_dataset import inspect_dataset
+from scripts.inspect_dataset import inspect_dataset, main
 
 
 TASK = "Pick up the red cube and place it in the bowl."
@@ -178,3 +178,63 @@ def test_missing_video_feature_is_rejected_without_crashing(tmp_path: Path) -> N
 
     assert report.passed is False
     assert "video-backed camera" in failure_details(report)
+
+
+def test_main_prints_passing_report_and_returns_zero(tmp_path: Path, capsys) -> None:
+    root = write_dataset_fixture(tmp_path)
+
+    exit_code = main(
+        [
+            "--root",
+            str(root),
+            "--expected-episodes",
+            "2",
+            "--expected-fps",
+            "10",
+        ],
+        sample_loader=lambda _: valid_decoded_sample(),
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "PASS" in output
+    assert "Episode 0: 2 frames, 0.200 s" in output
+    assert "observation.images.front: (3, 360, 640)" in output
+    assert "HUMAN REVIEW REQUIRED" in output
+
+
+def test_main_prints_quality_failures_and_returns_one(tmp_path: Path, capsys) -> None:
+    root = write_dataset_fixture(tmp_path)
+
+    exit_code = main(
+        [
+            "--root",
+            str(root),
+            "--expected-episodes",
+            "3",
+            "--expected-fps",
+            "10",
+        ],
+        sample_loader=lambda _: valid_decoded_sample(),
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 1
+    assert "FAIL" in output
+    assert "expected 3 episodes" in output
+
+
+def test_main_reports_unreadable_dataset_and_returns_two(tmp_path: Path, capsys) -> None:
+    exit_code = main(
+        [
+            "--root",
+            str(tmp_path / "missing"),
+            "--expected-episodes",
+            "3",
+            "--expected-fps",
+            "10",
+        ]
+    )
+
+    assert exit_code == 2
+    assert "error:" in capsys.readouterr().err
