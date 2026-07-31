@@ -48,7 +48,7 @@
       "type": "opencv",
       "index_or_path": 0,
       "width": 640,
-      "height": 480,
+      "height": 360,
       "fps": 30,
       "verified": true
     },

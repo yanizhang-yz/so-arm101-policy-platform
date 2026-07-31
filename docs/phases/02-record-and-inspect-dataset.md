@@ -197,3 +197,33 @@ the rejected buffer is absent.
 
 The pilot quality gate is complete. Full dataset collection can now begin while
 the pilot and rejection-control roots remain local, ignored evidence.
+
+## Full Collection Matrix
+
+The production dataset contains 50 accepted episodes arranged as ten rounds of
+five positions. The exact episode order and episode-level train/validation split
+are stored in
+`configs/experiments/red-cube-to-bowl-v1-collection.csv`.
+
+Define positions in the W1 camera view with `center` at the pilot cube location.
+Left and right follow the W1 image; near and far are measured relative to the
+follower base. Begin with 5 cm offsets from center and move a mark inward only if
+the power-off reachability rehearsal finds an unsafe or unreachable pose:
+
+```text
+farther from follower base
+
+far_left          far_right
+          center
+near_left         near_right
+
+nearer to follower base
+```
+
+Freeze the five cube marks, bowl mark, camera mount, lighting, instruction,
+calibration, and neutral pose for all rounds. Record one round per process. A
+failed attempt is re-recorded with `r` and never consumes an episode index.
+
+Rounds 5 and 10 form the ten-episode validation split. All other complete
+episodes form the 40-episode training split; frames from one episode are never
+divided across splits.
