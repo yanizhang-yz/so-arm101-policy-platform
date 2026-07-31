@@ -1,8 +1,10 @@
 # Phase 2: Record and Inspect the Dataset
 
-Date: 2026-07-21
+Started: 2026-07-21
 
-Status: in progress
+Completed: 2026-07-31
+
+Status: complete
 
 ## Objective
 
@@ -240,3 +242,55 @@ never consumes an episode index.
 Rounds 5 and 10 form the ten-episode validation split. All other complete
 episodes form the 40-episode training split; frames from one episode are never
 divided across splits.
+
+## Final Collection Evidence
+
+The completed local dataset is stored at
+`datasets/phase-2/red-cube-to-bowl-v1`. Raw data remains outside Git.
+
+| Split | Episodes | Frames | Duration | Each start position |
+|---|---:|---:|---:|---:|
+| Training | 40 | 22,500 | 750.0 s | 8 episodes |
+| Validation | 10 | 5,436 | 181.2 s | 2 episodes |
+| Total | 50 | 27,936 | 931.2 s | 10 episodes |
+
+The final quality gate was:
+
+```bash
+HF_HOME=/tmp/so101-hf-cache \
+HF_DATASETS_CACHE=/tmp/so101-hf-cache/datasets \
+python scripts/inspect_dataset.py \
+  --root datasets/phase-2/red-cube-to-bowl-v1 \
+  --expected-episodes 50 \
+  --expected-fps 30
+```
+
+It passed all of these checks:
+
+- Metadata reports 50 episodes, 27,936 frames, one task, and 30 Hz.
+- Every episode has contiguous frame indices and monotonic 30 Hz timestamps.
+- Every episode's video interval exactly matches its robot-data length.
+- All action and observation-state values are finite six-joint vectors.
+- A real sample decodes with action shape `(6,)`, state shape `(6,)`, and
+  camera shape `(3, 360, 640)`.
+- Each round's video frame count exactly equals the sum of its five episode
+  lengths.
+- Start/end contact sheets for all 50 episodes show a staged cube at the start
+  and the cube released in the bowl at the end.
+- The collection matrix joins one-to-one with dataset episode metadata and
+  produces exactly 40 training and 10 validation episodes.
+- Each of the five start positions appears eight times in training and twice
+  in validation.
+
+Round 5 required a documented repair after the inspector found 80 stale frames
+from a rejected attempt. The accepted robot data was preserved, the stale video
+tail was removed, affected timestamps were corrected, and the repaired dataset
+passed the same structural, decode, frame-count, and visual checks. The original
+local evidence remains at
+`datasets/phase-2/red-cube-to-bowl-v1-round5-contaminated-backup`.
+
+LeRobot's `meta/info.json` still exposes the physical collection as one
+`train: 0:50` range. The collection CSV is the authoritative logical 40/10
+episode split. The training workflow must materialize or explicitly select
+those episode indices before fitting SmolVLA; random frame-level splitting is
+not allowed.
